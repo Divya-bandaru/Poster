@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premiere Night</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#000;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+/* Background Stars */
+
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    animation:twinkle 3s infinite;
+}
+
+@keyframes twinkle{
+
+0%{
+opacity:.2;
+transform:scale(1);
+}
+
+50%{
+opacity:1;
+transform:scale(2);
+}
+
+100%{
+opacity:.2;
+transform:scale(1);
+}
+
+}
+
+/* Golden Particles */
+
+.spark{
+
+position:absolute;
+width:5px;
+height:5px;
+border-radius:50%;
+background:gold;
+box-shadow:0 0 12px gold;
+animation:float linear infinite;
+
+}
+
+@keyframes float{
+
+from{
+
+transform:translateY(110vh);
+opacity:1;
+
+}
+
+to{
+
+transform:translateY(-20vh);
+opacity:0;
+
+}
+
+}
+
+/* Intro */
+
+#intro{
+
+position:fixed;
+inset:0;
+
+display:flex;
+flex-direction:column;
+
+justify-content:center;
+align-items:center;
+
+background:radial-gradient(circle,#111,#000);
+
+z-index:1000;
+
+}
+
+.logo{
+
+font-size:80px;
+color:#ffd54f;
+
+animation:glow 2s infinite alternate;
+
+}
+
+@keyframes glow{
+
+from{
+
+text-shadow:0 0 15px gold;
+
+}
+
+to{
+
+text-shadow:0 0 60px gold,
+0 0 120px orange;
+
+}
+
+}
+
+.title{
+
+margin-top:25px;
+
+font-size:54px;
+
+font-weight:bold;
+
+color:white;
+
+letter-spacing:6px;
+
+text-align:center;
+
+}
+
+.subtitle{
+
+margin-top:20px;
+
+font-size:22px;
+
+color:#ddd;
+
+text-align:center;
+
+line-height:35px;
+
+}
+
+button{
+
+margin-top:55px;
+
+padding:18px 60px;
+
+font-size:24px;
+
+cursor:pointer;
+
+border:none;
+
+border-radius:60px;
+
+background:linear-gradient(45deg,#ffb300,#ff6f00);
+
+color:white;
+
+transition:.4s;
+
+}
+
+button:hover{
+
+transform:scale(1.08);
+
+box-shadow:0 0 30px gold;
+
+}
+
+/* Flash */
+
+#flash{
+
+position:fixed;
+
+inset:0;
+
+background:white;
+
+opacity:0;
+
+pointer-events:none;
+
+z-index:2000;
+
+}
+
+/* Poster */
+
+#poster{
+
+position:fixed;
+
+inset:0;
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+background:black;
+
+overflow:hidden;
+
+}
+
+#poster img{
+
+max-width:94vw;
+
+max-height:95vh;
+
+border-radius:14px;
+
+opacity:0;
+
+transform:scale(.15) rotate(-10deg);
+
+transition:2s;
+
+box-shadow:0 0 70px rgba(255,215,0,.8);
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Stars -->
+<script>
+for(let i=0;i<150;i++){
+
+    let star=document.createElement("div");
+    star.className="star";
+
+    star.style.left=Math.random()*100+"vw";
+    star.style.top=Math.random()*100+"vh";
+
+    star.style.animationDelay=Math.random()*3+"s";
+
+    document.body.appendChild(star);
+
+}
+</script>
+
+<!-- Intro Screen -->
+
+<div id="intro">
+
+    <div class="logo">⭐</div>
+
+    <div class="title">
+        PREMIERE NIGHT
+    </div>
+
+    <div class="subtitle">
+        Tonight's Feature Presentation
+        <br><br>
+        <b>Click Below To Begin</b>
+    </div>
+
+    <button onclick="reveal()">
+        🎬 ENTER THE PREMIERE
+    </button>
+
+</div>
+
+<!-- White Flash -->
+
+<div id="flash"></div>
+
+<!-- Background Music -->
+
+<audio id="bgMusic" preload="auto">
+    <source src="music.mpeg" type="audio/mpeg">
+</audio>
+
+<!-- Poster -->
+
+<div id="poster">
+
+    <img src="poster.png" id="img">
+
+</div>
+
+<script>
+
+// Create floating golden particles
+for(let i=0;i<150;i++){
+
+    let spark=document.createElement("div");
+
+    spark.className="spark";
+
+    spark.style.left=Math.random()*100+"vw";
+    spark.style.top=(100+Math.random()*20)+"vh";
+
+    spark.style.animationDuration=(4+Math.random()*4)+"s";
+    spark.style.animationDelay=Math.random()*5+"s";
+
+    document.body.appendChild(spark);
+
+}
+
+function reveal(){
+
+
+    // Hide intro
+    document.getElementById("intro").style.display="none";
+
+    // ---------- MUSIC ----------
+    const music=document.getElementById("bgMusic");
+
+    music.currentTime=0;
+    music.volume=0;
+
+    music.play().then(()=>{
+
+        let fade=setInterval(()=>{
+
+            if(music.volume<0.5){
+
+                music.volume=Math.min(music.volume+0.05,0.5);
+
+            }else{
+
+                clearInterval(fade);
+
+            }
+
+        },200);
+
+    }).catch(err=>{
+
+        console.log("Music Error:",err);
+
+    });
+
+    // ---------- FLASH ----------
+    const flash=document.getElementById("flash");
+
+    flash.style.transition="0.35s";
+    flash.style.opacity="1";
+
+    setTimeout(()=>{
+
+        flash.style.opacity="0";
+
+    },350);
+
+    // ---------- SHOW POSTER ----------
+    const poster=document.getElementById("poster");
+
+    poster.style.display="flex";
+
+    setTimeout(()=>{
+
+        const img=document.getElementById("img");
+
+        img.style.opacity="1";
+        img.style.transform="scale(1) rotate(0deg)";
+
+    },300);
+
+    // ---------- CONFETTI ----------
+    launchConfetti();
+
+}
+
+// CSS-only confetti
+function launchConfetti(){
+
+    for(let i=0;i<180;i++){
+
+        const c=document.createElement("div");
+
+        c.style.position="fixed";
+        c.style.left=Math.random()*100+"vw";
+        c.style.top="-20px";
+        c.style.width="8px";
+        c.style.height="14px";
+        c.style.background=
+            ["#FFD700","#FF5252","#42A5F5","#66BB6A","#FFFFFF"][Math.floor(Math.random()*5)];
+        c.style.transform="rotate("+Math.random()*360+"deg)";
+        c.style.zIndex="9999";
+        c.style.pointerEvents="none";
+        c.style.transition="transform 3.5s linear, top 3.5s linear, opacity 3.5s";
+
+        document.body.appendChild(c);
+
+        setTimeout(()=>{
+
+            c.style.top="110vh";
+            c.style.transform="translateX("+(Math.random()*300-150)+"px) rotate(720deg)";
+            c.style.opacity="0";
+
+        },10);
+
+        setTimeout(()=>{
+
+            c.remove();
+
+        },3800);
+
+    }
+
+}
+
+const img = document.getElementById("img");
+
+// Add a gentle golden glow after the reveal
+setTimeout(() => {
+
+    img.animate([
+        {
+            boxShadow: "0 0 50px rgba(255,215,0,.7)"
+        },
+        {
+            boxShadow: "0 0 90px rgba(255,255,180,1)"
+        },
+        {
+            boxShadow: "0 0 50px rgba(255,215,0,.7)"
+        }
+    ],{
+        duration:2500,
+        iterations:Infinity
+    });
+
+},2200);
+
+
+</script>
+
+</body>
+</html>
