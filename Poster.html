@@ -48,12 +48,14 @@ text-shadow:0 0 40px gold,0 0 70px orange;
     font-size:48px;
     letter-spacing:5px;
     margin-bottom:15px;
+    text-align:center;
 }
 
 .subtitle{
     color:#ddd;
     font-size:22px;
     margin-bottom:50px;
+    text-align:center;
 }
 
 button{
@@ -100,26 +102,23 @@ button:hover{
 }
 
 .spark{
-position:absolute;
-width:6px;
-height:6px;
-border-radius:50%;
-background:gold;
-animation:float 5s linear infinite;
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:gold;
+    animation:float linear infinite;
 }
 
 @keyframes float{
-
 from{
 transform:translateY(100vh);
 opacity:1;
 }
-
 to{
 transform:translateY(-100px);
 opacity:0;
 }
-
 }
 </style>
 </head>
@@ -150,8 +149,14 @@ One Click. One Memory. One Beautiful Farewell.
 <img src="poster.png" id="img">
 </div>
 
+<!-- Background Music -->
+<audio id="bgMusic" preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 
+// Floating Golden Particles
 for(let i=0;i<120;i++){
 
 let s=document.createElement("div");
@@ -159,6 +164,7 @@ let s=document.createElement("div");
 s.className="spark";
 
 s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
 s.style.animationDuration=(3+Math.random()*4)+"s";
 s.style.animationDelay=Math.random()*5+"s";
 
@@ -166,28 +172,57 @@ document.body.appendChild(s);
 
 }
 
+// Reveal Function
 function reveal(){
 
+// Start Music
+let music=document.getElementById("bgMusic");
+
+music.volume=0;
+
+music.play();
+
+let fade=setInterval(function(){
+
+if(music.volume<0.5){
+
+music.volume=Math.min(music.volume+0.05,0.5);
+
+}else{
+
+clearInterval(fade);
+
+}
+
+},200);
+
+// Hide Intro
 document.getElementById("intro").style.display="none";
 
+// Flash Effect
 let f=document.getElementById("flash");
 
 f.style.transition=".4s";
+
 f.style.opacity="1";
 
-setTimeout(()=>{
+setTimeout(function(){
+
 f.style.opacity="0";
+
 },350);
 
+// Show Poster
 let p=document.getElementById("poster");
 
 p.style.display="flex";
 
-setTimeout(()=>{
+setTimeout(function(){
 
 let img=document.getElementById("img");
 
 img.style.opacity="1";
+
 img.style.transform="scale(1)";
 
 },300);
